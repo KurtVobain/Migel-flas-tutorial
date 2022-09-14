@@ -6,3 +6,4 @@ flask-login~=0.6.2
 email-validator~=1.2.1
 flask-mail~=0.9.1
 pyjwt~=2.4.0
+flask-bootstrap~=3.3.7.1
