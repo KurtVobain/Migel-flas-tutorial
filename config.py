@@ -17,3 +17,5 @@ class Config(object):
     ADMINS = [os.environ.get('MAIL_ADDRESS')]
 
     POSTS_PER_PAGE = 25
+    # Supported languages
+    LANGUAGES = ['en', 'es', 'ru']
