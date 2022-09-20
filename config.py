@@ -19,3 +19,6 @@ class Config(object):
     POSTS_PER_PAGE = 25
     # Supported languages
     LANGUAGES = ['en', 'es', 'ru']
+    # Token to get IAM-token
+    YANDEX_OAUTH = os.environ.get('YANDEX_OAUTH')
+    FOLDER_ID = os.environ.get('FOLDER_ID')

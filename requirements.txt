@@ -9,3 +9,5 @@ pyjwt~=2.4.0
 flask-bootstrap~=3.3.7.1
 flask-moment~=1.0.4
 flask-babel~=2.0.0
+guess-language_spirit~=0.5.3
+requests~=2.28.1

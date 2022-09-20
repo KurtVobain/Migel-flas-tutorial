@@ -7,6 +7,15 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import app, db, login
+from time import time
+from datetime import datetime
+
+import jwt
+from hashlib import md5
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app import app, db, login
 
 
 # Table does not store any data,
@@ -91,6 +100,8 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # Original language of the post
+    language = db.Column(db.String(5))
 
     def __repr__(self):
         return "<Post {}>".format(self.body)
