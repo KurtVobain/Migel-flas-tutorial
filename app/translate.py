@@ -1,12 +1,11 @@
-import json
 import requests
 from flask_babel import _
-from app import app
+from app import current_app
 
 
 def get_iam_token():
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    data = str({"yandexPassportOauthToken": app.config["YANDEX_OAUTH"]})
+    data = str({"yandexPassportOauthToken": current_app.config["YANDEX_OAUTH"]})
 
     r = requests.post(
         "https://iam.api.cloud.yandex.net/iam/v1/tokens", headers=headers, data=data
@@ -19,8 +18,8 @@ def get_iam_token():
 
 
 def translate(text, dest_language):
-    if ("FOLDER_ID" not in app.config or not app.config["FOLDER_ID"]) or (
-        "YANDEX_OAUTH" not in app.config or not app.config["YANDEX_OAUTH"]
+    if ("FOLDER_ID" not in current_app.config or not current_app.config["FOLDER_ID"]) or (
+        "YANDEX_OAUTH" not in current_app.config or not current_app.config["YANDEX_OAUTH"]
     ):
         return _("Error: the translation service is not configured.")
 
@@ -32,7 +31,7 @@ def translate(text, dest_language):
     body = {
         "targetLanguageCode": dest_language,
         "texts": text,
-        "folderId": app.config["FOLDER_ID"],
+        "folderId": current_app.config["FOLDER_ID"],
     }
     headers = {
         "Content-Type": "application/json",
