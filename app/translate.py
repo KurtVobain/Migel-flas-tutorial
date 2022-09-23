@@ -18,7 +18,7 @@ def get_iam_token():
     return r.json().get("iamToken")
 
 
-def translate(text, source_language, dest_language):
+def translate(text, dest_language):
     if ("FOLDER_ID" not in app.config or not app.config["FOLDER_ID"]) or (
         "YANDEX_OAUTH" not in app.config or not app.config["YANDEX_OAUTH"]
     ):

@@ -4,10 +4,11 @@ from werkzeug.urls import url_parse
 from flask_babel import _, get_locale
 from guess_language import guess_language
 from flask_login import current_user, login_user, logout_user, login_required
-from flask import render_template, flash, redirect, url_for, request, g
+from flask import render_template, flash, redirect, url_for, request, g, jsonify
 
 from app import app, db
 from app.models import User, Post
+from app.translate import translate
 from app.email import send_password_reset_email
 from app.forms import (
     LoginForm,
@@ -15,7 +16,7 @@ from app.forms import (
     EditProfileForm,
     PostForm,
     ResetPasswordRequestForm,
-    ResetPasswordForm
+    ResetPasswordForm,
 )
 
 
@@ -27,8 +28,8 @@ def index():
     if form.validate_on_submit():
 
         language = guess_language(form.post.data)
-        if language == 'UNKNOWN' or len(language) > 5:
-            language = ''
+        if language == "UNKNOWN" or len(language) > 5:
+            language = ""
 
         post = Post(body=form.post.data, author=current_user, language=language)
         db.session.add(post)
@@ -218,17 +219,25 @@ def reset_password_request():
     )
 
 
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
     user = User.verify_reset_password_token(token)
     if not user:
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
         db.session.commit()
-        flash('Your password has been reset.')
-        return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form)
+        flash("Your password has been reset.")
+        return redirect(url_for("login"))
+    return render_template("reset_password.html", form=form)
+
+
+@app.route("/translate", methods=["POST"])
+@login_required
+def translate_text():
+    return jsonify(
+        {"text": translate(request.form["text"], request.form["dest_language"])}
+    )
