@@ -15,7 +15,7 @@ from flask_babel import _, get_locale
 from guess_language import guess_language
 
 from app import db
-from app.main.forms import EditProfileForm, PostForm
+from app.main.forms import EditProfileForm, PostForm, EmptyForm
 from app.models import User, Post
 from app.translate import translate
 from app.main import bp
@@ -75,9 +75,14 @@ def user(username):
         if posts.has_prev
         else None
     )
-
+    form = EmptyForm()
     return render_template(
-        "user.html", user=user, posts=posts.items, next_url=next_url, prev_url=prev_url
+        "user.html",
+        user=user,
+        posts=posts.items,
+        next_url=next_url,
+        prev_url=prev_url,
+        form=form,
     )
 
 
@@ -97,44 +102,52 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash("Your changes have been saved.")
+        flash(_("Your changes have been saved."))
         return redirect(url_for("main.edit_profile"))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template("edit_profile.html", title="Edit Profile", form=form)
+    return render_template("edit_profile.html", title=_("Edit Profile"), form=form)
 
 
-@bp.route("/follow/<username>")
+@bp.route("/follow/<username>", methods=["POST"])
 @login_required
 def follow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash("User {} not found.".format(username))
-        return redirect(url_for("main.index"))
-    if user == current_user:
-        flash("You cannot follow yourself!")
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(_("User %(username)s not found.", username=username))
+            return redirect(url_for("main.index"))
+        if user == current_user:
+            flash(_("You cannot follow yourself!"))
+            return redirect(url_for("main.user", username=username))
+        current_user.follow(user)
+        db.session.commit()
+        flash(_("You are following %(username)s!", username=username))
         return redirect(url_for("main.user", username=username))
-    current_user.follow(user)
-    db.session.commit()
-    flash("You are following {}!".format(username))
-    return redirect(url_for("main.user", username=username))
+    else:
+        return redirect(url_for("main.index"))
 
 
-@bp.route("/unfollow/<username>")
+@bp.route("/unfollow/<username>", methods=["POST"])
 @login_required
 def unfollow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash("User {} not found.".format(username))
-        return redirect(url_for("main.index"))
-    if user == current_user:
-        flash("You cannot unfollow yourself!")
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(_("User %(username)s not found.", username=username))
+            return redirect(url_for("main.index"))
+        if user == current_user:
+            flash(_("You cannot unfollow yourself!"))
+            return redirect(url_for("main.user", username=username))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash(_("You are not following %(username)s.", username=username))
         return redirect(url_for("main.user", username=username))
-    current_user.unfollow(user)
-    db.session.commit()
-    flash("You are not following {}.".format(username))
-    return redirect(url_for("main.user", username=username))
+    else:
+        return redirect(url_for("main.index"))
 
 
 @bp.route("/explore")
@@ -144,13 +157,11 @@ def explore():
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, current_app.config["POSTS_PER_PAGE"], False
     )
-
     next_url = url_for("main.explore", page=posts.next_num) if posts.has_next else None
     prev_url = url_for("main.explore", page=posts.prev_num) if posts.has_prev else None
-
     return render_template(
         "index.html",
-        title="Explore",
+        title=_("Explore"),
         posts=posts.items,
         next_url=next_url,
         prev_url=prev_url,

@@ -18,8 +18,11 @@ def get_iam_token():
 
 
 def translate(text, dest_language):
-    if ("FOLDER_ID" not in current_app.config or not current_app.config["FOLDER_ID"]) or (
-        "YANDEX_OAUTH" not in current_app.config or not current_app.config["YANDEX_OAUTH"]
+    if (
+        "FOLDER_ID" not in current_app.config or not current_app.config["FOLDER_ID"]
+    ) or (
+        "YANDEX_OAUTH" not in current_app.config
+        or not current_app.config["YANDEX_OAUTH"]
     ):
         return _("Error: the translation service is not configured.")
 
@@ -47,4 +50,4 @@ def translate(text, dest_language):
     if r.status_code != 200:
         return _("Error: the translation service failed.")
 
-    return r.json().get('translations')[0].get('text')
+    return r.json().get("translations")[0].get("text")
