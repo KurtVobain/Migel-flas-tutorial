@@ -26,3 +26,7 @@ class Config(object):
     # Token to get IAM-token
     YANDEX_OAUTH = os.environ.get('YANDEX_OAUTH')
     FOLDER_ID = os.environ.get('FOLDER_ID')
+
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+    ELASTICSEARCH_PASSWORD = os.environ.get('ELASTICSEARCH_PASSWORD')
+    ELASTICSEARCH_USER = os.environ.get('ELASTICSEARCH_USER')

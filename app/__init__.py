@@ -1,6 +1,7 @@
+import os
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
-import os
+
 from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,8 +9,11 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+from elasticsearch import Elasticsearch
 from flask_babel import Babel, lazy_gettext as _l
+
 from config import Config
+
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -80,6 +84,13 @@ def create_app(config_class=Config):
 
         app.logger.setLevel(logging.INFO)
         app.logger.info("Microblog startup")
+
+        app.elasticsearch = Elasticsearch(
+            cloud_id=app.config['ELASTICSEARCH_URL'],
+            basic_auth=(
+                app.config['ELASTICSEARCH_USER'], app.config['ELASTICSEARCH_PASSWORD']
+            )
+        ) if app.config['ELASTICSEARCH_URL'] else None
 
     return app
 
