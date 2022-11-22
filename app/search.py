@@ -2,15 +2,8 @@ from flask import current_app
 
 
 def add_to_index(index, model):
-    """
-    :desxr: Add index to elasticsearch
-
-    :param index:
-    :param model:
-    """
     if not current_app.elasticsearch:
         return
-
     payload = {}
     for field in model.__searchable__:
         payload[field] = getattr(model, field)
@@ -18,30 +11,18 @@ def add_to_index(index, model):
 
 
 def remove_from_index(index, model):
-    """
-    :descr: Delete index from elastic
-    :param index:
-    :param model:
-    """
     if not current_app.elasticsearch:
         return
-
-    current_app.elasticsearch.indices.delete(index=index, id=model.id)
+    current_app.elasticsearch.delete(index=index, id=model.id)
 
 
 def query_index(index, query, page, per_page):
     if not current_app.elasticsearch:
         return [], 0
-
-    search = current_app.elasticseacrh.search(
+    search = current_app.elasticsearch.search(
         index=index,
-        body={
-            "query": {"multi_match": {"query": query, "fileds": ["*"]}},
-            "from": (page - 1) * per_page,
-            "size": per_page,
-        },
-    )
-
+        body={'query': {'multi_match': {'query': query, 'fields': ['*']}},
+              'from': (page - 1) * per_page, 'size': per_page})
     ids = [int(hit['_id']) for hit in search['hits']['hits']]
 
-    return ids, search['hits']['total']
+    return ids, search['hits']['total']['value']

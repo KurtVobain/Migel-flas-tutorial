@@ -38,6 +38,13 @@ def create_app(config_class=Config):
     moment.init_app(app)
     babel.init_app(app)
 
+    app.elasticsearch = Elasticsearch(
+        cloud_id=app.config['ELASTICSEARCH_URL'],
+        basic_auth=(
+            app.config['ELASTICSEARCH_USER'], app.config['ELASTICSEARCH_PASSWORD']
+        )
+    ) if app.config['ELASTICSEARCH_URL'] else None
+
     from app.errors import bp as errors_bp
 
     app.register_blueprint(errors_bp)
@@ -74,23 +81,18 @@ def create_app(config_class=Config):
         file_handler = RotatingFileHandler(
             "logs/microblog.log", maxBytes=10240, backupCount=10
         )
+
         file_handler.setFormatter(
             logging.Formatter(
                 "%(asctime)s %(levelname)s: %(message)s " "[in %(pathname)s:%(lineno)d]"
             )
         )
+
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
 
         app.logger.setLevel(logging.INFO)
         app.logger.info("Microblog startup")
-
-        app.elasticsearch = Elasticsearch(
-            cloud_id=app.config['ELASTICSEARCH_URL'],
-            basic_auth=(
-                app.config['ELASTICSEARCH_USER'], app.config['ELASTICSEARCH_PASSWORD']
-            )
-        ) if app.config['ELASTICSEARCH_URL'] else None
 
     return app
 

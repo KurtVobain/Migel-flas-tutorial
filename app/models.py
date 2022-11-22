@@ -92,9 +92,11 @@ def load_user(id):
 
 
 class SearchableMixin(object):
+
     @classmethod
     def search(cls, expression, page, per_page):
         ids, total = query_index(cls.__tablename__, expression, page, per_page)
+
         if total == 0:
             return cls.query.filter_by(id=0), 0
 
@@ -102,10 +104,8 @@ class SearchableMixin(object):
         for i in range(len(ids)):
             when.append((ids[i], i))
 
-        return (
-            cls.query.filter(cls.id.in_(ids)).order_by(db.case(when, value=cls.id)),
-            total,
-        )
+        return cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value=cls.id)), total
 
     @classmethod
     def before_commit(cls, session):
