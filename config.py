@@ -30,3 +30,5 @@ class Config(object):
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     ELASTICSEARCH_PASSWORD = os.environ.get('ELASTICSEARCH_PASSWORD')
     ELASTICSEARCH_USER = os.environ.get('ELASTICSEARCH_USER')
+
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
