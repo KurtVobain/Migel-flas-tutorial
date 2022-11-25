@@ -14,7 +14,9 @@ Link to Miguel articles: https://www.kickstarter.com/projects/1124925856/the-new
 
 * Flask
 * SQLAlchemy
-* SQLite\PostgreSQL
+* SQLite/PostgreSQL
+* HTML/CSS
+* [Bootstrap](https://getbootstrap.com/)
 * [Elasticsearch](https://www.elastic.co/)
 * [Yandex Cloud](https://cloud.yandex.ru/)
 * Gunicorn
