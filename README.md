@@ -20,6 +20,7 @@ Link to Miguel articles: https://www.kickstarter.com/projects/1124925856/the-new
 * [Elasticsearch](https://www.elastic.co/)
 * [Yandex Cloud](https://cloud.yandex.ru/)
 * Gunicorn
+* Docker
 * [Heroku](https://dashboard.heroku.com/) as deployment service
 
 # Contact
