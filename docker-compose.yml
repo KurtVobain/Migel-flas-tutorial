@@ -1,0 +1,12 @@
+services:
+    microblog:
+        image: microblog
+        ports:
+        - 5000:5000
+        environment:
+            DATABASE_URL: postgresql+psycopg2://postgres:example@postgress/microblog
+
+    postgress:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: example
