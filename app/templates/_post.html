@@ -10,19 +10,21 @@
                     <span class="user_popup">
                         <a href="{{ url_for('main.user', username=post.author.username) }}">
                             {{ post.author.username }}
-                    </a>
+                        </a>
                     </span>
                 {% endset %}
-                said {{ moment(post.timestamp).fromNow() }}:
+                {{ _('%(username)s said %(when)s',
+                    username=user_link, when=moment(post.timestamp).fromNow()) }}
                 <br>
                 <span id="post{{ post.id }}">{{ post.body }}</span>
                 {% if post.language and post.language != g.locale %}
-                    <br><br>
+                <br><br>
                 <span id="translation{{ post.id }}">
                     <a href="javascript:translate(
-                            '#post{{ post.id }}',
-                            '#translation{{ post.id }}',
-                            '{{ g.locale }}');">{{ _('Translate') }}</a>
+                                '#post{{ post.id }}',
+                                '#translation{{ post.id }}',
+                                '{{ post.language }}',
+                                '{{ g.locale }}');">{{ _('Translate') }}</a>
                 </span>
                 {% endif %}
             </td>

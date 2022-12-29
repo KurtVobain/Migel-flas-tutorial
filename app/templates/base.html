@@ -75,7 +75,7 @@
             });
         }
 
-        $(function() {
+        $(function () {
             var timer = null;
             var xhr = null;
             $('.user_popup').hover(
@@ -87,12 +87,19 @@
                         xhr = $.ajax(
                             '/user/' + elem.first().text().trim() + '/popup').done(
                                 function(data) {
-                                    xhr = null
+                                    xhr = null;
+                                    elem.popover({
+                                        trigger: 'manual',
+                                        html: true,
+                                        animation: true,
+                                        container: elem,
+                                        content: data
+                                    }).popover('show');
+                                    flask_moment_render_all();
                                 }
-                        );
+                            );
                     }, 1000);
                 },
-
                 function(event) {
                     // mouse out event handler
                     var elem = $(event.currentTarget);
@@ -105,10 +112,10 @@
                         xhr = null;
                     }
                     else {
-
+                        elem.popover('destroy');
                     }
                 }
-            )
+            );
         });
     </script>
 {% endblock %}
