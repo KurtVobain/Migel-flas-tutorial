@@ -206,7 +206,7 @@ def user_popup(username):
     return render_template('user_popup.html', user=user)
 
 
-@bp.route('/send_message/<recipient>', methods=['GET', 'SET'])
+@bp.route('/send_message/<recipient>', methods=['GET', 'POST'])
 @login_required
 def send_message(recipient):
     user = User.query.filter_by(username=recipient).first_or_404()
