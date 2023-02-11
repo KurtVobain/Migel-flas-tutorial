@@ -116,7 +116,7 @@ class User(UserMixin, db.Model):
         return Task.query.filter_by(user=self, complete=False).all()
 
     def get_task_in_progress(self, name):
-        return Task.query.filter_by(name=name, user=self, completr=False).first()
+        return Task.query.filter_by(name=name, user=self, complete=False).first()
 
     @staticmethod
     def verify_reset_password_token(token):
