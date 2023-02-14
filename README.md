@@ -15,13 +15,14 @@ Link to Miguel articles: https://www.kickstarter.com/projects/1124925856/the-new
 * Flask
 * SQLAlchemy
 * SQLite/PostgreSQL
-* HTML/CSS
+* HTML/CSS + JavaScript
 * [Bootstrap](https://getbootstrap.com/)
 * [Elasticsearch](https://www.elastic.co/)
 * [Yandex Cloud](https://cloud.yandex.ru/)
 * Gunicorn
 * Docker
 * [Heroku](https://dashboard.heroku.com/) as deployment service
+* Redis
 
 # Contact
 Evgenii Karpov - [Telegram](https://t.me/karpov_ev)
