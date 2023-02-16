@@ -26,7 +26,7 @@ class PaginatedAPIMixin(object):
     def to_collection_dict(query, page, per_page, endpoint, **kwargs):
         resources = query.paginate(page, per_page, False)
         data = {
-            'items': [item.to_dict() for item in resources.item],
+            'items': [item.to_dict() for item in resources.items],
             '_meta': {
                 'page': page,
                 'per_page': per_page,
@@ -146,7 +146,7 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
         data = {
             'id': self.id,
             'username': self.username,
-            'last_seen': self.last_seen.isoformat() + 'Z',
+            'last_seen': self.last_seen.isoformat() + 'Z' if self.last_seen else None,
             'about_me': self.about_me,
             'post_count': self.posts.count(),
             'follower_count': self.followers.count(),
